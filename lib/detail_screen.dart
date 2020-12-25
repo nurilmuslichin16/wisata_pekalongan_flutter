@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wisata_pekalongan/model/tempat_wisata.dart';
 
 var informationTextStyle = TextStyle(fontFamily: 'Oxygen');
 
 class DetailScreen extends StatelessWidget {
+  final TempatWisata tempat;
+
+  DetailScreen({@required this.tempat});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,11 +16,25 @@ class DetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset('images/monumen.jpeg'),
+            Stack(children: [
+              Image.asset(tempat.imageAsset),
+              SafeArea(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                  FavoritButton(),
+                ],
+              ))
+            ]),
             Container(
                 margin: EdgeInsets.only(top: 16.0),
                 child: Text(
-                  "Monumen Kota Pekalongan",
+                  tempat.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: 'Staatliches',
@@ -34,7 +53,7 @@ class DetailScreen extends StatelessWidget {
                         height: 8.0,
                       ),
                       Text(
-                        'Open Everyday',
+                        tempat.openDays,
                         style: informationTextStyle,
                       ),
                     ],
@@ -46,7 +65,7 @@ class DetailScreen extends StatelessWidget {
                         height: 8.0,
                       ),
                       Text(
-                        '09.00 - 20.00',
+                        tempat.openTime,
                         style: informationTextStyle,
                       ),
                     ],
@@ -58,7 +77,7 @@ class DetailScreen extends StatelessWidget {
                         height: 8.0,
                       ),
                       Text(
-                        '09.00 - 20.00',
+                        tempat.ticketPrice,
                         style: informationTextStyle,
                       ),
                     ],
@@ -69,48 +88,53 @@ class DetailScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'Jika kita melintas di Jalur Pantura, tepatnya di depan monumen kebanggaan Kota Pekalongan, Monumen Djoeang 45. Kita akan disuguhi pemandangan baru dari warisan sejarah tersebut. Monumen yang berdiri guna mengenang perjuangan rakyat Pekalongan menumpas penjajah Jepang pada 3 Oktober 1945 ini kembali direhab. Setelah kemarin ada peninggian, pavling, dan penambahan lampu. Kini monumen kembali direnovasi menjadi lebih bagus.',
+                tempat.description,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.0),
               ),
             ),
-            Image.network(
-                'https://i.ytimg.com/vi/DG2kdgNLVjE/maxresdefault.jpg'),
             Container(
               height: 150,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  Padding(
+                children: tempat.imageUrls.map((url) {
+                  return Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                          'https://4.bp.blogspot.com/-QonScHPqG3s/VLPfq4nHNfI/AAAAAAAAAq0/11zulOlTAfs/s1600/monumen%2Bpekalongan.jpg'),
+                      child: Image.network(url),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                          'https://oss.pekalongankota.go.id/images/spsimpleportfolio/monumen.jpg'),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                          'https://sigijateng.id/wp-content/uploads/2020/04/IMG-20200427-WA0002.jpg'),
-                    ),
-                  )
-                ],
+                  );
+                }).toList(),
               ),
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class FavoritButton extends StatefulWidget {
+  @override
+  _FavoritButtonState createState() => _FavoritButtonState();
+}
+
+class _FavoritButtonState extends State<FavoritButton> {
+  bool isFavorite = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: Colors.red,
+      ),
+      onPressed: () {
+        setState(() {
+          isFavorite = !isFavorite;
+        });
+      },
     );
   }
 }

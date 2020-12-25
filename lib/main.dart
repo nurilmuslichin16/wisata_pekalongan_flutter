@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_pekalongan/detail_screen.dart';
+import 'package:wisata_pekalongan/main_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wisata Pekalongan',
       theme: ThemeData.dark(),
-      home: DetailScreen(),
+      home: MainScreen(),
     );
   }
 }
